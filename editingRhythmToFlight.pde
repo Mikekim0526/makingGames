@@ -397,7 +397,7 @@ void keyReleased(){
     }
 }                                            */
 
-void serialEvent(Serial port){
+void serialEvent(Serial port){                  //https://www.hackster.io/Luis_R_A/yaw-pitch-and-roll-from-values-to-visual-interface-a46969
   myString = port.readStringUntil(lf);
   
   if(myString != null) {
