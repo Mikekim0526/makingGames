@@ -9,6 +9,7 @@ int mx, my;
 float x, y;
 int ten,one;
 boolean fired = true;
+int cX, cY, cW, cH;
 
 void setup () {
   println("Available serial ports:");
@@ -69,7 +70,8 @@ void draw () {
   if(y>my ||y<-my){
     y=0;
   }
-  print(one);
+  fill(255,255);
+  stroke(0);
   rect(x,y,40,30);
 }
 
@@ -86,9 +88,19 @@ void serialEvent(Serial port) {
 }
 
 void sky(){
-  rect(0,0,100,80);
+  c(0,0,100,60);
+  c(80,40,50,30);
 }
 
+void c(int cX, int cY, int cW, int cH){
+  fill(255,100);
+  noStroke();
+  ellipse(random(cX*3/4,cX*5/4),random(cY*3/4,cY*5/4),random(cW*3/4,cW*5/4),random(cH*3/4,cH*5/4));
+  ellipse(random(cX*3/4,cX*5/4),random(cY*3/4,cY*5/4),random(cW*3/4,cW*5/4),random(cH*3/4,cH*5/4));
+  ellipse(random(cX*3/4,cX*5/4),random(cY*3/4,cY*5/4),random(cW*3/4,cW*5/4),random(cH*3/4,cH*5/4));
+  ellipse(random(cX*3/4,cX*5/4),random(cY*3/4,cY*5/4),random(cW*3/4,cW*5/4),random(cH*3/4,cH*5/4));
+  ellipse(random(cX*3/4,cX*5/4),random(cY*3/4,cY*5/4),random(cW*3/4,cW*5/4),random(cH*3/4,cH*5/4));
+}
 void mouseClicked(){
   if(mouseButton==LEFT){
     fired = false;
