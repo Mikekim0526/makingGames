@@ -4,15 +4,17 @@ float convertRawAcceleration(int aRaw) {
   float a = (aRaw * 2.0) / 32768.0;
   return a;
 }
-const int L = 76;
-const int LL= 62;
-const int R = 94;
-const int RR = 108;
+int UsualY = 85;
+const int LL= 52;
+const int L = 70;
+const int R = 110;
+const int RR = 130;
 
-const int F = 108;
-const int FF = 130;
-const int B =78;
-const int BB = 60;
+int UsualX = 100;
+const int FF = 140;
+const int F = 124;
+const int B =80;
+const int BB = 50;
 
 int ten, one;
 
@@ -59,7 +61,10 @@ void Accelerometer(){
   } else{
     one=5;
   }
-  
+
+  //Serial.print(accX);
+  //Serial.print("  ");
+  //Serial.println(accY);
   Serial.print(ten);
   Serial.println(one);
   delay(800);
