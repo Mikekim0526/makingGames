@@ -8,6 +8,7 @@ Serial port;
 int mx, my;
 float x, y;
 int ten,one;
+boolean fired = true;
 
 void setup () {
   println("Available serial ports:");
@@ -30,8 +31,9 @@ void setup () {
 void draw () {
   translate(mx-x, my-y);
   background(100,130,200);
-  rect(0,0, 100, 80);
-  
+  if(fired){
+    sky();
+  }
   if(msg>50){
     x+=2;
     ten=50;
@@ -81,4 +83,16 @@ void serialEvent(Serial port) {
       catch (NumberFormatException npe) { 
       }
     }
+}
+
+void sky(){
+  rect(0,0,100,80);
+}
+
+void mouseClicked(){
+  if(mouseButton==LEFT){
+    fired = false;
+  } else{
+    fired = true;
+  }
 }
