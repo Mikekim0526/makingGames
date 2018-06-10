@@ -20,7 +20,7 @@ void setup () {
   
   size(800, 600);
   background(100,130,200);
-  
+  rectMode(CENTER);
   mx=width/2;
   my=height/2;
   x=0;
@@ -28,7 +28,9 @@ void setup () {
 }
 
 void draw () {
-  translate(mx, my);
+  translate(mx-x, my-y);
+  background(100,130,200);
+  rect(0,0, 100, 80);
   
   if(msg>50){
     x+=2;
@@ -48,15 +50,15 @@ void draw () {
   }
   one = msg-ten;
   if(one==5){
-    y-=2;
+    y+=2;
   } else if(one==4){
-    y-=1;
+    y+=1;
   } else if(one==3){
     y+=0;
   } else if(one==2){
-    y+=1;
+    y-=1;
   } else{
-    y+=2;
+    y-=2;
   }
   
   if(x>mx ||x<-mx){
@@ -66,7 +68,6 @@ void draw () {
     y=0;
   }
   print(one);
-  rectMode(CENTER);
   rect(x,y,40,30);
 }
 
