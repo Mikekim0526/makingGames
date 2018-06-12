@@ -4,7 +4,7 @@ int cx, cy, cw, ch, cd;
 
 boolean kbl, kbr, kbu, kbd;
 
-PImage cloud, rainy;
+PImage cloud, cloudy, rainy;
 
 void setup(){
   size(800,600,P3D);
@@ -21,7 +21,7 @@ void setup(){
   kbr=false;
   kbd=false;
   
-  cloud= loadImage("cloud.jpg");
+  cloudy= loadImage("cloud.jpg");
   rainy= loadImage("rainy.jpg");
 }
 
@@ -40,7 +40,7 @@ void draw(){
 void sky(){
   fill(100);
   stroke(0);
-  cloud(50,40,40,20,2*z);
+  cloud(0,0,40,20,2*z);
   
 }
 
@@ -62,28 +62,16 @@ void cloud(int cx, int cy, int cw, int ch, int cd){
   endShape();
 }
 
-void rain(int cx, int cy, int cw, int ch, int cd){
-  fill(255,100);
-  noStroke();
-  beginShape();
-  texture(rainy);
-  vertex(100, 70, z-cd, 0, 0);
-  vertex(100, 100, z-cd, 0, 1);
-  vertex(60, 100, z-cd, 1, 1);
-  vertex(60, 70, z-cd, 1, 0);
-  endShape();
-}
-
 void myself(){
   fill(200,0,0);
   stroke(0);
   beginShape();  
-  vertex(x+30,y-20,-z);
-  vertex(x-30,y-20,-z);
+  vertex(x+30,y,-z);
+  vertex(x-30,y,-z);
   //vertex(x-30,y+20,-z);
   //vertex(x+30,y+20,-z);
-  vertex(x-30,y,-z+300);
-  vertex(x+30,y,-z+300);
+  vertex(x-30,y+20,-z+200);
+  vertex(x+30,y+20,-z+200);
   endShape(CLOSE);
   
   if(kbl==true){
