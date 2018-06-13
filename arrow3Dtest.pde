@@ -44,8 +44,8 @@ void draw() {
   sky();
   //flyingObj();
   myself();
-  missile(1800);
-  missile(2000);
+  missile(0,0,1800);
+  missile(0,0,2000);
 
 
   z+=speed;
@@ -100,11 +100,21 @@ void flyingObj() {
   cloud(50, 40, 40, 60, 1000, missile);
 }
 
-void missile(int cd) {
+void missile(int cx, int cy, int cd) {
   fill(200,0,0);
   stroke(100, 0, 0, 40);
-  translate(50, 40, z-cd);
+  pushMatrix();
+  translate(cx, cy, z-cd);
   drawCylinder(30, 0, 150, 20);
+  popMatrix();
+  
+  pushMatrix();
+  translate(X, Y, z);
+  if(z-cd==0 && dist(0,0,cx,cy)<50){
+    speed=0;
+    z=0;
+  }
+  popMatrix();
 }
 
 void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
