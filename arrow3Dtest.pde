@@ -44,8 +44,8 @@ void draw() {
   sky();
   //flyingObj();
   myself();
-  missile();
-  Dcloud(-50, Y, z-600, 50);
+  missile(1800);
+  missile(2000);
 
 
   z+=speed;
@@ -98,19 +98,19 @@ void flyingObj() {
   cloud(50, 40, 40, 20, 100, cloudy);
   cloud(50, 40, 40, 20, 500, rainy);
   cloud(50, 40, 40, 60, 1000, missile);
-  Dcloud(-50, 40, 600, 50);
 }
 
-void missile() {
+void missile(int cd) {
   fill(200,0,0);
   stroke(100, 0, 0, 40);
-  translate(50, 40, z-1000);
+  translate(50, 40, z-cd);
   drawCylinder(30, 0, 150, 20);
 }
 
 void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
   float angle = 0;
   float angleIncrement = TWO_PI / sides;
+  pushMatrix();
   beginShape(QUAD_STRIP);
   rotateX(PI/2);
   for (int i = 0; i < sides + 1; ++i) {
@@ -119,6 +119,7 @@ void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
     angle += angleIncrement;
   }
   endShape();
+  popMatrix();
 
   // If it is not a cone, draw the circular top cap
   if (topRadius != 0) {
@@ -147,14 +148,6 @@ void cloud(float cx, float cy, float cw, float ch, float cd, PImage cloud) {
   endShape(CLOSE);
 }
 
-void Dcloud(float cx, float cy, float cd, float cr) {
-  fill(100);
-  noStroke();
-  pushMatrix();
-  translate(random(cx, cx+5), random(cy, cy+5), z-cd);
-  sphere(cr);
-  popMatrix();
-}
 void building(PImage building, float cx, float cy, float cw, float ch, float cd) {
   fill(255, 0);
   noStroke();
