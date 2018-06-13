@@ -1,10 +1,12 @@
 int mx, my;
 float x, y, z, speed;
+float X, Y;
+
 float cx, cy, cw, ch, cd, cr;
 
 boolean kbl, kbr, kbu, kbd;
 
-PImage cloud, cloudy, rainy, building, tower, missile;
+PImage sky, cloud, cloudy, rainy, building, tower, missile;
 
 
 void setup() {
@@ -27,11 +29,15 @@ void setup() {
   rainy= loadImage("rainy.jpg");
   tower= loadImage("tower.jpg");
   missile= loadImage("missile.jpg");
+  sky = loadImage("sky.jpg");
 }
 
 void draw() {
   background(170, 200, 250);
-  translate(mx-x, my-y, 200);
+  X=mx-x;
+  Y=my-y;
+  
+  translate(X, Y, 200);
   lights();
   fill(255);
 
@@ -40,19 +46,32 @@ void draw() {
   myself();
   missile();
   Dcloud(-50, 40, z-600, 80);
+  
 
   z+=speed;
   speed+=0.001;
-  print(speed);
-  print("   ");
-  println(z);
+  
+  //print(speed);
+  //print("   ");
+  //println(z);
 }
 
 void sky() {
-  fill(100);
+  fill(255);
   stroke(0);
+  beginShape();
+  texture(sky);
+  //vertex(-X,-Y,-4800,0,0);
+  //vertex(-X,Y,-4800,0,1);
+  //vertex(X,Y,-4800,1,1);
+  //vertex(X,-Y,-4800,1,0);
+  vertex(-12*mx,-12*my,-4800,0,0);
+  vertex(-12*mx,12*my,-4800,0,1);
+  vertex(12*mx,12*my,-4800,1,1);
+  vertex(12*mx,-12*my,-4800,1,0);
+  endShape(CLOSE);
   cloud(0, 0, 40, 20, z, rainy);
-  building(tower, 0, 0, 400, 720, 3000-z);
+  building(tower, 0, 0, 400, 720, 5200-z);
 }
 
 void flyingObj() {
