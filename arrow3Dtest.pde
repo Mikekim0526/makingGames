@@ -4,7 +4,7 @@ int cx, cy, cw, ch, cd;
 
 boolean kbl, kbr, kbu, kbd;
 
-PImage cloud, cloudy, rainy;
+PImage cloud, cloudy, rainy, building, tower;
 
 void setup(){
   size(800,600,P3D);
@@ -23,11 +23,12 @@ void setup(){
   
   cloudy= loadImage("cloud.jpg");
   rainy= loadImage("rainy.jpg");
+  tower= loadImage("tower.jpg");
 }
 
 void draw(){
   background(170,200,250);
-  translate(mx-x,my-y,z+200);
+  translate(mx-x,my-y,200);
   fill(255);
   
   sky();
@@ -40,17 +41,18 @@ void draw(){
 void sky(){
   fill(100);
   stroke(0);
-  cloud(0,0,40,20,2*z);
+  cloud(0,0,40,20, z, rainy);
+  building(tower, -250, 200, 160, 320, 1000);
   
 }
 
 void flyingObj(){
-  cloud(50,40,40,20,100);
-  cloud(50,40,40,20,500);
-  cloud(50,40,40,20,1000);
+  cloud(50,40,40,20,100, cloudy);
+  cloud(50,40,40,20,500, rainy);
+  cloud(50,40,40,20,1000, cloudy);
 }
 
-void cloud(int cx, int cy, int cw, int ch, int cd){
+void cloud(int cx, int cy, int cw, int ch, int cd, PImage cloud){
   fill(255,100);
   noStroke();
   beginShape();
@@ -62,16 +64,28 @@ void cloud(int cx, int cy, int cw, int ch, int cd){
   endShape();
 }
 
+void building(PImage building, int cx, int cy, int cw, int ch, int cd){
+  fill(85);
+  noStroke();
+  beginShape();
+  texture(building);
+  vertex(cx+cw, cy-ch, -cd, 0, 0);
+  vertex(cx+cw, cy+ch, -cd, 0, 1);
+  vertex(cx-cw,cy+ch, -cd, 1, 1);
+  vertex(cx-cw, cy-ch, -cd, 1, 0);
+  endShape();
+}
+
 void myself(){
   fill(200,0,0);
   stroke(0);
-  beginShape();  
-  vertex(x+30,y,-z);
-  vertex(x-30,y,-z);
+  beginShape();
+  vertex(x+30,y,0);
+  vertex(x-30,y,0);
   //vertex(x-30,y+20,-z);
   //vertex(x+30,y+20,-z);
-  vertex(x-30,y+20,-z+200);
-  vertex(x+30,y+20,-z+200);
+  vertex(x-30,y+20,200);
+  vertex(x+30,y+20,200);
   endShape(CLOSE);
   
   if(kbl==true){
