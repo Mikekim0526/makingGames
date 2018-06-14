@@ -12,9 +12,9 @@ float px, py;
 float X, Y;
 int r, g, b, t, dt, pt;
 
-float cx, cy, cw, ch, cd, cr;
+float cx, cy, cw, ch, cd, cr, fin;
 
-boolean kbl, kbr, kbu, kbd;
+boolean kbl, kbr, kbu, kbd, playing;
 
 PImage sky, cloud, cloudy, rainy, building, tower, missile, man, life, ending;
 
@@ -36,6 +36,8 @@ void setup() {
   kbr=false;
   kbr=false;
   kbd=false;
+  playing=true;
+  fin=10000;
 
   r=220;
   g=220;
@@ -66,15 +68,22 @@ void draw() {
   lights();
   fill(255);
 
-  sky();
-  flyingObj();
-  myself();
-
+  if (playing==true) {
+    sky();
+    flyingObj();
+    myself();
+  }
+  
   z+=speed;
   speed+=rate;
 
   px=x;
   py=y;
+
+  if (z>3*fin) {
+    ending();
+    playing=false;
+  }
 }
 
 void sky() {
@@ -88,7 +97,7 @@ void sky() {
   vertex(12*mx, -12*my, -4800, 1, 0);
   endShape(CLOSE);
   //cloud(0, 0, 40, 20, z, rainy);
-  building(tower, 0, 0, mx, my*1.8, 10000-z/3);
+  building(tower, 0, 0, mx, my*1.8, fin-z/3);
   fill(130, 20);
   for (int j=-100; j<=900; j+=150) {
     for (int i=-200; i<3*mx-100; i+=100) {
@@ -138,7 +147,7 @@ void missile(int cx, int cy, int cd) {
     r=120;
     g=20;
     b=20;
-    y+=random(3,7);
+    y+=random(3, 7);
     dt=0;
   }
   popMatrix();
@@ -162,7 +171,7 @@ void obstacle(int cx, int ch, int cd) {
       r=20;
       g=20;
       b=20;
-      y+=random(3,7);
+      y+=random(3, 7);
       dt=0;
     }
   }
@@ -271,6 +280,18 @@ void myself() {
     endShape(CLOSE);
   }
   pt=t;
+}
+
+void ending() {
+  fill(255);
+  stroke(0);
+  beginShape();
+  texture(ending);
+  vertex(-10*mx, -10*my, -4800, 0, 0);
+  vertex(-10*mx, 10*my, -4800, 0, 1);
+  vertex(10*mx, 10*my, -4800, 1, 1);
+  vertex(10*mx, -10*my, -4800, 1, 0);
+  endShape(CLOSE);
 }
 
 void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
