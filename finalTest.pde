@@ -125,6 +125,9 @@ void sky() {
 
 void flyingObj() {
   missile(0, 0, 4800);
+  missile(100,50,6000);
+  missile(-200,-10,6300);
+  missile(600, 200, 7200);
   missile(0, 0, 9000);
   obstacle(-100, 4, 5000);
 }
@@ -135,7 +138,9 @@ void missile(int cx, int cy, int cd) {
   pushMatrix();
   translate(cx, cy, z-cd);
   drawCylinder(mx*0.2, 0, mx*0.8, 16);
-  translate(cx, cy, -mx*1.2);
+  popMatrix();
+  pushMatrix();
+  translate(cx, cy, z-cd-mx*1.2);
   fill(150);
   drawCylinder(mx*0.15, mx*0.15, mx*1.2, 8);
   popMatrix();
