@@ -40,10 +40,10 @@ void setup() {
   missile= loadImage("missile.jpg");
   sky = loadImage("sky.jpg");
   man = loadImage("man.jpg");
-  
+
   port = new Serial(this, "COM13", 9600);
   port.clear();
-  
+
   myString = port.readStringUntil(lf);
   myString = null;
 }
@@ -61,13 +61,11 @@ void draw() {
   myself();
   missile(0, 0, 4800);
   missile(0, 0, 9000);
-  obstacle(-100,4,5000);
+  obstacle(-100, 4, 5000);
 
 
   z+=speed;
   speed+=0.01;
-  
-  println(msg);
 }
 
 void sky() {
@@ -81,9 +79,7 @@ void sky() {
   vertex(12*mx, -12*my, -4800, 1, 0);
   endShape(CLOSE);
   cloud(0, 0, 40, 20, z, rainy);
-  building(tower, 0, 0, mx, my*1.8, 10200-z/2);
-  building(null, 100, 100, 200, 200, 2000-z);
-
+  building(tower, 0, 0, mx, my*1.8, 10000-z/3);
   fill(130, 20);
   for (int j=-100; j<=900; j+=150) {
     for (int i=-200; i<3*mx-100; i+=100) {
@@ -123,31 +119,31 @@ void missile(int cx, int cy, int cd) {
   drawCylinder(mx*0.2, 0, mx*0.8, 16);
   translate(cx, cy, -mx*1.2);
   fill(150);
-  drawCylinder(mx*0.15,mx*0.15,mx*1.2,8);
+  drawCylinder(mx*0.15, mx*0.15, mx*1.2, 8);
   popMatrix();
 
   pushMatrix();
-  translate(X, Y, z);
-  if (z-cd<=speed && z-cd>=-speed && dist(0, 0, X-mx, Y-my)<mx*0.3) {
+  //translate(X, Y, z);
+  if (z-cd<=speed && z-cd>=-speed && dist(0, 0, X-mx, Y-my)<mx*0.28) {
     speed=0;
   }
   popMatrix();
 }
 
-void obstacle(int cx, int ch, int cd){
+void obstacle(int cx, int ch, int cd) {
   fill(120);
   stroke(100);
   beginShape();
-  vertex(cx-mx/2,2*my,z-cd);
-  vertex(cx+mx/2,2*my,z-cd);
-  vertex(cx+mx/2,my-ch*my/2,z-cd);
-  vertex(cx-mx/2,my-ch*my/2,z-cd);
+  vertex(cx-mx/2, 2*my, z-cd);
+  vertex(cx+mx/2, 2*my, z-cd);
+  vertex(cx+mx/2, my-ch*my/2, z-cd);
+  vertex(cx-mx/2, my-ch*my/2, z-cd);
   endShape(CLOSE);
-
+  
   pushMatrix();
   translate(X, Y, z);
   if (z-cd<=speed && z-cd>=-speed) {
-    if(cx+mx/2>=X && cx-mx/2<=X && my-ch*my/2<Y){
+    if (X-mx/2+cx>=0 && X-mx/2+cx<=mx && ch*my/4>=Y-my) {
       speed=0;
     }
   }
@@ -183,36 +179,36 @@ void myself() {
   noStroke();
   directionalLight(200, 200, 200, 0, 10, 1);
 
-  if(msg>50){
+  if (msg>50) {
     x+=mx/80;
     ten=50;
-  } else if(msg>40){
+  } else if (msg>40) {
     x=mx/200;
     ten=40;
-  } else if(msg>30){
+  } else if (msg>30) {
     x+=0;
     ten=30;
-  } else if(msg>20){
+  } else if (msg>20) {
     x-=mx/200;
     ten=20;
-  } else if(msg>10){
+  } else if (msg>10) {
     x-=mx/80;
     ten=10;
   }
   one = msg-ten;
-  if(one==5){
+  if (one==5) {
     y+=my/80;
-  } else if(one==4){
+  } else if (one==4) {
     y+=my/200;
-  } else if(one==3){
+  } else if (one==3) {
     y+=0;
-  } else if(one==2){
+  } else if (one==2) {
     y-=my/200;
-  } else{
+  } else {
     y-=my/80;
   }
-  
-  
+
+
   if (kbl==true) {
     x-=10;
   } else if (kbr==true) {
@@ -302,13 +298,13 @@ void mouseClicked() {
 }
 
 void serialEvent(Serial port) { 
-    myString = port.readStringUntil(lf);
-    
-    if (myString != null) { 
-      try { 
-        msg=Integer.parseInt(myString.trim()); 
-      } 
-      catch (NumberFormatException npe) { 
-      }
+  myString = port.readStringUntil(lf);
+
+  if (myString != null) { 
+    try { 
+      msg=Integer.parseInt(myString.trim());
+    } 
+    catch (NumberFormatException npe) {
     }
+  }
 }
