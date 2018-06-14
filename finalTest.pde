@@ -18,6 +18,7 @@ PImage sky, cloud, cloudy, rainy, building, tower, missile, man;
 
 
 void setup() {
+  smooth();
   size(800, 600, P3D);
   background(170, 200, 250);
   rectMode(CENTER);
@@ -40,7 +41,7 @@ void setup() {
   sky = loadImage("sky.jpg");
   man = loadImage("man.jpg");
   
-  port = new Serial(this, "COM4", 9600);
+  port = new Serial(this, "COM13", 9600);
   port.clear();
   
   myString = port.readStringUntil(lf);
@@ -60,6 +61,7 @@ void draw() {
   myself();
   missile(0, 0, 4800);
   missile(0, 0, 9000);
+  obstacle(-100,4,5000);
 
 
   z+=speed;
@@ -79,10 +81,11 @@ void sky() {
   vertex(12*mx, -12*my, -4800, 1, 0);
   endShape(CLOSE);
   cloud(0, 0, 40, 20, z, rainy);
-  building(tower, 0, 0, 400, 720, 5200-z);
+  building(tower, 0, 0, mx, my*1.8, 10200-z/2);
+  building(null, 100, 100, 200, 200, 2000-z);
 
   fill(130, 20);
-  for (int j=-100; j<=300; j+=100) {
+  for (int j=-100; j<=900; j+=150) {
     for (int i=-200; i<3*mx-100; i+=100) {
       pushMatrix();
       translate(i-mx, my+50, -j);
@@ -117,18 +120,119 @@ void missile(int cx, int cy, int cd) {
   stroke(100, 0, 0, 40);
   pushMatrix();
   translate(cx, cy, z-cd);
-  drawCylinder(30, 0, 150, 20);
-  translate(cx, cy, -150);
+  drawCylinder(mx*0.2, 0, mx*0.8, 16);
+  translate(cx, cy, -mx*1.2);
   fill(150);
-  drawCylinder(20,20,200,12);
+  drawCylinder(mx*0.15,mx*0.15,mx*1.2,8);
   popMatrix();
 
   pushMatrix();
   translate(X, Y, z);
-  if (z-cd<=speed && z-cd>=-speed && dist(0, 0, X-mx, Y-my)<75) {
+  if (z-cd<=speed && z-cd>=-speed && dist(0, 0, X-mx, Y-my)<mx*0.3) {
     speed=0;
   }
   popMatrix();
+}
+
+void obstacle(int cx, int ch, int cd){
+  fill(120);
+  stroke(100);
+  beginShape();
+  vertex(cx-mx/2,2*my,z-cd);
+  vertex(cx+mx/2,2*my,z-cd);
+  vertex(cx+mx/2,my-ch*my/2,z-cd);
+  vertex(cx-mx/2,my-ch*my/2,z-cd);
+  endShape(CLOSE);
+
+  pushMatrix();
+  translate(X, Y, z);
+  if (z-cd<=speed && z-cd>=-speed) {
+    if(cx+mx/2>=X && cx-mx/2<=X && my-ch*my/2<Y){
+      speed=0;
+    }
+  }
+  popMatrix();
+}
+
+void cloud(float cx, float cy, float cw, float ch, float cd, PImage cloud) {
+  fill(255, 100);
+  noStroke();
+  beginShape();
+  texture(cloud);
+  vertex(cx+cw, cy-ch, z-cd, 0, 0);
+  vertex(cx+cw, cy+ch, z-cd, 0, 1);
+  vertex(cx-cw, cy+ch, z-cd, 1, 1);
+  vertex(cx-cw, cy-ch, z-cd, 1, 0);
+  endShape(CLOSE);
+}
+
+void building(PImage building, float cx, float cy, float cw, float ch, float cd) {
+  fill(255);
+  noStroke();
+  beginShape();
+  texture(building);
+  vertex(cx+cw, cy-ch, -cd, 0, 0);
+  vertex(cx+cw, cy+ch, -cd, 0, 1);
+  vertex(cx-cw, cy+ch, -cd, 1, 1);
+  vertex(cx-cw, cy-ch, -cd, 1, 0);
+  endShape(CLOSE);
+}
+
+void myself() {
+  fill(200, 0);
+  noStroke();
+  directionalLight(200, 200, 200, 0, 10, 1);
+
+  if(msg>50){
+    x+=mx/80;
+    ten=50;
+  } else if(msg>40){
+    x=mx/200;
+    ten=40;
+  } else if(msg>30){
+    x+=0;
+    ten=30;
+  } else if(msg>20){
+    x-=mx/200;
+    ten=20;
+  } else if(msg>10){
+    x-=mx/80;
+    ten=10;
+  }
+  one = msg-ten;
+  if(one==5){
+    y+=my/80;
+  } else if(one==4){
+    y+=my/200;
+  } else if(one==3){
+    y+=0;
+  } else if(one==2){
+    y-=my/200;
+  } else{
+    y-=my/80;
+  }
+  
+  
+  if (kbl==true) {
+    x-=10;
+  } else if (kbr==true) {
+    x+=10;
+  }
+  if (kbu==true) {
+    y-=10;
+  } else if (kbd==true) {
+    y+=10;
+  }
+  x=constrain(x, -1.5*mx+50, 1.5*mx-50);
+  y=constrain(y, -my, my);
+
+  beginShape();
+  texture(man);
+  vertex(x+mx/10, y-my/20, 0, 1, 0);
+  vertex(x-mx/10, y-my/20, 0, 0, 0);
+  vertex(x-mx/10, y+my/10, 200, 0, 1);
+  vertex(x+mx/10, y+my/10, 200, 1, 1);
+  endShape(CLOSE);
 }
 
 void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
@@ -157,89 +261,6 @@ void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
     }
     endShape();
   }
-}
-
-void cloud(float cx, float cy, float cw, float ch, float cd, PImage cloud) {
-  fill(255, 100);
-  noStroke();
-  beginShape();
-  texture(cloud);
-  vertex(cx+cw, cy-ch, z-cd, 0, 0);
-  vertex(cx+cw, cy+ch, z-cd, 0, 1);
-  vertex(cx-cw, cy+ch, z-cd, 1, 1);
-  vertex(cx-cw, cy-ch, z-cd, 1, 0);
-  endShape(CLOSE);
-}
-
-void building(PImage building, float cx, float cy, float cw, float ch, float cd) {
-  fill(255, 0);
-  noStroke();
-  beginShape();
-  texture(building);
-  vertex(cx+cw, cy-ch, -cd, 0, 0);
-  vertex(cx+cw, cy+ch, -cd, 0, 1);
-  vertex(cx-cw, cy+ch, -cd, 1, 1);
-  vertex(cx-cw, cy-ch, -cd, 1, 0);
-  endShape(CLOSE);
-}
-
-void myself() {
-  fill(200, 0);
-  noStroke();
-  directionalLight(200, 200, 200, 0, 200, 20);
-
-  if(msg>50){
-    x+=2;
-    ten=50;
-  } else if(msg>40){
-    x++;
-    ten=40;
-  } else if(msg>30){
-    x+=0;
-    ten=30;
-  } else if(msg>20){
-    x-=1;
-    ten=20;
-  } else if(msg>10){
-    x-=2;
-    ten=10;
-  }
-  one = msg-ten;
-  if(one==5){
-    y-=2;
-  } else if(one==4){
-    y-=1;
-  } else if(one==3){
-    y+=0;
-  } else if(one==2){
-    y+=1;
-  } else{
-    y+=2;
-  }
-  
-  
-  if (kbl==true) {
-    x-=3;
-  } else if (kbr==true) {
-    x+=3;
-  }
-  if (kbu==true) {
-    y-=3;
-  } else if (kbd==true) {
-    y+=3;
-  }
-  x=constrain(x, -1.5*mx+50, 1.5*mx-50);
-  y=constrain(y, -my, my);
-
-  beginShape();
-  texture(man);
-  vertex(x+30, y, 0, 1, 0);
-  vertex(x-30, y, 0, 0, 0);
-  //vertex(x-30,y+20,-z);
-  //vertex(x+30,y+20,-z);
-  vertex(x-30, y+20, 200, 0, 1);
-  vertex(x+30, y+20, 200, 1, 1);
-  endShape(CLOSE);
 }
 
 void keyPressed() {
