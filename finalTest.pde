@@ -30,7 +30,7 @@ void setup() {
   x=0;
   y=0;
   z=0;
-  speed=30;
+  speed=40;
   rate=0.5;
   kbl=false;
   kbr=false;
@@ -292,10 +292,10 @@ void ending() {
   stroke(0);
   beginShape();
   texture(ending);
-  vertex(-10*mx, -10*my, -4800, 0, 0);
-  vertex(-10*mx, 10*my, -4800, 0, 1);
-  vertex(10*mx, 10*my, -4800, 1, 1);
-  vertex(10*mx, -10*my, -4800, 1, 0);
+  vertex(-10*mx, -8*my, -4800, 0, 0);
+  vertex(-10*mx, 8*my, -4800, 0, 1);
+  vertex(10*mx, 8*my, -4800, 1, 1);
+  vertex(10*mx, -8*my, -4800, 1, 0);
   endShape(CLOSE);
 }
 
