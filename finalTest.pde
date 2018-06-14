@@ -8,13 +8,15 @@ Serial port;
 
 int mx, my;
 float x, y, z, speed;
+float px, py;
 float X, Y;
+int r, g, b, t;
 
 float cx, cy, cw, ch, cd, cr;
 
 boolean kbl, kbr, kbu, kbd;
 
-PImage sky, cloud, cloudy, rainy, building, tower, missile, man;
+PImage sky, cloud, cloudy, rainy, building, tower, missile, man, life, ending;
 
 
 void setup() {
@@ -34,13 +36,18 @@ void setup() {
   kbr=false;
   kbd=false;
 
+  r=220;
+  g=220;
+  b=220;
+
   cloudy= loadImage("cloud.jpg");
   rainy= loadImage("rainy.jpg");
   tower= loadImage("tower.jpg");
   missile= loadImage("missile.jpg");
   sky = loadImage("sky.jpg");
   man = loadImage("man.jpg");
-
+  life = loadImage("life.jpg");
+  ending = loadImage("ending.jpg");
   port = new Serial(this, "COM13", 9600);
   port.clear();
 
@@ -62,10 +69,13 @@ void draw() {
 
   z+=speed;
   speed+=0.05;
+
+  px=x;
+  py=y;
 }
 
 void sky() {
-  fill(255);
+  fill(r, g, b);
   stroke(0);
   beginShape();
   texture(sky);
@@ -74,7 +84,7 @@ void sky() {
   vertex(12*mx, 12*my, -4800, 1, 1);
   vertex(12*mx, -12*my, -4800, 1, 0);
   endShape(CLOSE);
-  cloud(0, 0, 40, 20, z, rainy);
+  //cloud(0, 0, 40, 20, z, rainy);
   building(tower, 0, 0, mx, my*1.8, 10000-z/3);
   fill(130, 20);
   for (int j=-100; j<=900; j+=150) {
@@ -122,6 +132,9 @@ void missile(int cx, int cy, int cd) {
   //translate(X, Y, z);
   if (z-cd<=speed && z-cd>=-speed && dist(0, 0, X-mx, Y-my)<mx*0.28) {
     speed=0;
+    r=120;
+    g=20;
+    b=20;
   }
   popMatrix();
 }
@@ -135,12 +148,15 @@ void obstacle(int cx, int ch, int cd) {
   vertex(cx+mx/2, my-ch*my/2, z-cd);
   vertex(cx-mx/2, my-ch*my/2, z-cd);
   endShape(CLOSE);
-  
+
   pushMatrix();
   translate(X, Y, z);
   if (z-cd<=speed && z-cd>=-speed) {
     if (X-mx/2+cx>=0 && X-mx/2+cx<=mx && ch*my/4>=Y-my) {
       speed=0;
+      r=20;
+      g=20;
+      b=20;
     }
   }
   popMatrix();
@@ -218,13 +234,31 @@ void myself() {
   x=constrain(x, -1.5*mx+50, 1.5*mx-50);
   y=constrain(y, -my, my);
 
+  if (abs(x-px)>mx/80 || abs(y-py)>my/80) {
+    x=px;
+    y=py;
+  }
+
   beginShape();
+  fill(r, g, b);
   texture(man);
   vertex(x+mx/10, y-my/20, 0, 1, 0);
   vertex(x-mx/10, y-my/20, 0, 0, 0);
   vertex(x-mx/10, y+my/10, 200, 0, 1);
   vertex(x+mx/10, y+my/10, 200, 1, 1);
   endShape(CLOSE);
+  
+  if(t<20){
+    t++;
+  beginShape();
+  fill(255);
+  texture(life);
+  vertex(x+mx/10, y-my/20, 0, 1, 0);
+  vertex(x-mx/10, y-my/20, 0, 0, 0);
+  vertex(x-mx/10, y+my/10, 0, 0, 1);
+  vertex(x+mx/10, y+my/10, 0, 1, 1);
+  endShape(CLOSE);
+  }
 }
 
 void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
@@ -244,8 +278,6 @@ void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
   if (topRadius != 0) {
     angle = 0;
     beginShape(TRIANGLE_FAN);
-
-    // Center point
     vertex(0, 0, 0);
     for (int i = 0; i < sides + 1; i++) {
       vertex(topRadius * cos(angle), 0, topRadius * sin(angle));
@@ -268,39 +300,42 @@ void serialEvent(Serial port) {
 }
 
 /* void keyPressed() {
-  if (keyCode == LEFT) {
-    kbl=true;
-  } else if (keyCode == RIGHT) {
-    kbr=true;
-  }
-  if (keyCode == UP) {
-    kbu=true;
-  } else if (keyCode == DOWN) {
-    kbd=true;
-  }
-}
-
-void keyReleased() {
-  if (keyCode == LEFT) {
-    kbl = false;
-  }
-  if (keyCode == DOWN) {
-    kbd=false;
-  }
-  if (keyCode == RIGHT) {
-    kbr = false;
-  }
-  if (keyCode == UP) {
-    kbu = false;
-  }
-  if (keyCode == 'R') {
-    z=0;
-  }
-}
+ if (keyCode == LEFT) {
+ kbl=true;
+ } else if (keyCode == RIGHT) {
+ kbr=true;
+ }
+ if (keyCode == UP) {
+ kbu=true;
+ } else if (keyCode == DOWN) {
+ kbd=true;
+ }
+ }
+ 
+ void keyReleased() {
+ if (keyCode == LEFT) {
+ kbl = false;
+ }
+ if (keyCode == DOWN) {
+ kbd=false;
+ }
+ if (keyCode == RIGHT) {
+ kbr = false;
+ }
+ if (keyCode == UP) {
+ kbu = false;
+ }
+ if (keyCode == 'R') {
+ z=0;
+ }
+ } */
 
 void mouseClicked() {
   z=0;
   speed=30;
   x=0;
   y=0;
-} */
+  r=200;
+  g=200;
+  b=200;
+}
