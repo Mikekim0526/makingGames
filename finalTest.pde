@@ -7,10 +7,10 @@ int ten, one;
 Serial port;
 
 int mx, my;
-float x, y, z, speed;
+float x, y, z, speed, rate;
 float px, py;
 float X, Y;
-int r, g, b, t;
+int r, g, b, t, dt, pt;
 
 float cx, cy, cw, ch, cd, cr;
 
@@ -21,7 +21,7 @@ PImage sky, cloud, cloudy, rainy, building, tower, missile, man, life, ending;
 
 void setup() {
   smooth();
-  size(800, 600, P3D);
+  size(1200, 900, P3D);
   background(170, 200, 250);
   rectMode(CENTER);
   textureMode(NORMAL);
@@ -31,6 +31,7 @@ void setup() {
   y=0;
   z=0;
   speed=30;
+  rate=0.5;
   kbl=false;
   kbr=false;
   kbr=false;
@@ -39,6 +40,8 @@ void setup() {
   r=220;
   g=220;
   b=220;
+  t=0;
+  dt=1;
 
   cloudy= loadImage("cloud.jpg");
   rainy= loadImage("rainy.jpg");
@@ -68,7 +71,7 @@ void draw() {
   myself();
 
   z+=speed;
-  speed+=0.05;
+  speed+=rate;
 
   px=x;
   py=y;
@@ -135,6 +138,8 @@ void missile(int cx, int cy, int cd) {
     r=120;
     g=20;
     b=20;
+    y+=random(3,7);
+    dt=0;
   }
   popMatrix();
 }
@@ -157,6 +162,8 @@ void obstacle(int cx, int ch, int cd) {
       r=20;
       g=20;
       b=20;
+      y+=random(3,7);
+      dt=0;
     }
   }
   popMatrix();
@@ -244,21 +251,26 @@ void myself() {
   texture(man);
   vertex(x+mx/10, y-my/20, 0, 1, 0);
   vertex(x-mx/10, y-my/20, 0, 0, 0);
-  vertex(x-mx/10, y+my/10, 200, 0, 1);
-  vertex(x+mx/10, y+my/10, 200, 1, 1);
+  vertex(x-mx/10, y+my/10, my*2/3, 0, 1);
+  vertex(x+mx/10, y+my/10, my*2/3, 1, 1);
   endShape(CLOSE);
-  
-  if(t<20){
-    t++;
-  beginShape();
-  fill(255);
-  texture(life);
-  vertex(x+mx/10, y-my/20, 0, 1, 0);
-  vertex(x-mx/10, y-my/20, 0, 0, 0);
-  vertex(x-mx/10, y+my/10, 0, 0, 1);
-  vertex(x+mx/10, y+my/10, 0, 1, 1);
-  endShape(CLOSE);
+
+  println(t, dt, pt);
+  t+=dt;
+  if (t>=20 || t<=0) {
+    dt=-dt;
   }
+  if (t>pt) {
+    beginShape();
+    fill(255);
+    texture(life);
+    vertex(x-mx/2, y-my/20, 0, 1, 0);
+    vertex(x-mx/12-mx/2, y-my/20, 0, 0, 0);
+    vertex(x-mx/12-mx/2, y+my/20, 0, 0, 1);
+    vertex(x-mx/2, y+my/20, 0, 1, 1);
+    endShape(CLOSE);
+  }
+  pt=t;
 }
 
 void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
