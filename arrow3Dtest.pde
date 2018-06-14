@@ -44,12 +44,12 @@ void draw() {
   sky();
   //flyingObj();
   myself();
-  missile(0,0,1800);
-  missile(0,0,2000);
+  missile(0, 0, 4800);
+  missile(0, 0, 9000);
 
 
   z+=speed;
-  speed+=0.001;
+  speed+=0.01;
 
   //print(speed);
   //print("   ");
@@ -101,18 +101,20 @@ void flyingObj() {
 }
 
 void missile(int cx, int cy, int cd) {
-  fill(200,0,0);
+  fill(200, 0, 0);
   stroke(100, 0, 0, 40);
   pushMatrix();
   translate(cx, cy, z-cd);
   drawCylinder(30, 0, 150, 20);
+  translate(cx, cy, -150);
+  fill(150);
+  drawCylinder(20,20,200,12);
   popMatrix();
-  
+
   pushMatrix();
   translate(X, Y, z);
-  if(z-cd==0 && dist(0,0,cx,cy)<50){
+  if (z-cd<=speed && z-cd>=-speed && dist(0, 0, X-mx, Y-my)<50) {
     speed=0;
-    z=0;
   }
   popMatrix();
 }
@@ -131,7 +133,6 @@ void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
   endShape();
   popMatrix();
 
-  // If it is not a cone, draw the circular top cap
   if (topRadius != 0) {
     angle = 0;
     beginShape(TRIANGLE_FAN);
@@ -171,9 +172,9 @@ void building(PImage building, float cx, float cy, float cw, float ch, float cd)
 }
 
 void myself() {
-  fill(200,0);
+  fill(200, 0);
   noStroke();
-  directionalLight(200,200,200,0,200,20);
+  directionalLight(200, 200, 200, 0, 200, 20);
 
   if (kbl==true) {
     x-=3;
@@ -185,7 +186,7 @@ void myself() {
   } else if (kbd==true) {
     y+=3;
   }
-  x=constrain(x, -1.5*mx, 1.5*mx);
+  x=constrain(x, -1.5*mx+50, 1.5*mx-50);
   y=constrain(y, -my, my);
 
   beginShape();
@@ -232,7 +233,7 @@ void keyReleased() {
 
 void mouseClicked() {
   z=0;
-  speed=2;
+  speed=20;
   x=0;
   y=0;
 }
