@@ -28,7 +28,7 @@ void setup() {
   x=0;
   y=0;
   z=0;
-  speed=20;
+  speed=30;
   kbl=false;
   kbr=false;
   kbr=false;
@@ -57,15 +57,11 @@ void draw() {
   fill(255);
 
   sky();
-  //flyingObj();
+  flyingObj();
   myself();
-  missile(0, 0, 4800);
-  missile(0, 0, 9000);
-  obstacle(-100, 4, 5000);
-
 
   z+=speed;
-  speed+=0.01;
+  speed+=0.05;
 }
 
 void sky() {
@@ -106,9 +102,9 @@ void sky() {
 }
 
 void flyingObj() {
-  cloud(50, 40, 40, 20, 100, cloudy);
-  cloud(50, 40, 40, 20, 500, rainy);
-  cloud(50, 40, 40, 60, 1000, missile);
+  missile(0, 0, 4800);
+  missile(0, 0, 9000);
+  obstacle(-100, 4, 5000);
 }
 
 void missile(int cx, int cy, int cd) {
@@ -259,7 +255,19 @@ void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
   }
 }
 
-void keyPressed() {
+void serialEvent(Serial port) { 
+  myString = port.readStringUntil(lf);
+
+  if (myString != null) { 
+    try { 
+      msg=Integer.parseInt(myString.trim());
+    } 
+    catch (NumberFormatException npe) {
+    }
+  }
+}
+
+/* void keyPressed() {
   if (keyCode == LEFT) {
     kbl=true;
   } else if (keyCode == RIGHT) {
@@ -292,19 +300,7 @@ void keyReleased() {
 
 void mouseClicked() {
   z=0;
-  speed=20;
+  speed=30;
   x=0;
   y=0;
-}
-
-void serialEvent(Serial port) { 
-  myString = port.readStringUntil(lf);
-
-  if (myString != null) { 
-    try { 
-      msg=Integer.parseInt(myString.trim());
-    } 
-    catch (NumberFormatException npe) {
-    }
-  }
-}
+} */
