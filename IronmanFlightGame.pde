@@ -53,13 +53,13 @@ void setup() {
   man = loadImage("man.jpg");
   life = loadImage("life.jpg");
   ending = loadImage("ending.jpg");
-  port = new Serial(this, "COM13", 9600);
+  port = new Serial(this, "COM3", 9600);
   port.clear();
 
   myString = port.readStringUntil(lf);
   myString = null;
-  
-  float [] rx= {random(-mx ,mx)};
+
+  float [] rx= {random(-mx, mx)};
   float [] ry= {random(-my, my)};
 }
 
@@ -76,7 +76,7 @@ void draw() {
     flyingObj();
     myself();
   }
-  
+
   z+=speed;
   speed+=rate;
 
@@ -128,8 +128,8 @@ void sky() {
 
 void flyingObj() {
   missile(0, 0, 4800);
-  missile(100,50,6000);
-  missile(-200,-10,6300);
+  missile(100, 50, 6000);
+  missile(-200, -10, 6300);
   missile(900, 200, 7200);
   missile(750, 400, 9000);
   missile(400, -300, 11000);
@@ -144,54 +144,60 @@ void flyingObj() {
 }
 
 void missile(float cx, float cy, float cd) {
-  fill(200, 0, 0);
-  stroke(100, 0, 0, 40);
-  pushMatrix();
-  translate(cx, cy, z-cd);
-  drawCylinder(mx*0.2, 0, mx*0.8, 16);
-  popMatrix();
-  pushMatrix();
-  translate(cx, cy, z-cd-mx*1.2);
-  fill(150);
-  drawCylinder(mx*0.15, mx*0.15, mx*1.2, 8);
-  popMatrix();
+  if (z>cd-6000 || z<cd+200) {
 
-  pushMatrix();
-  //translate(X, Y, z);
-  if (z-cd<=speed && z-cd>=-speed && dist(0, 0, X-mx, Y-my)<mx*0.28) {
-    speed=0;
-    r=120;
-    g=20;
-    b=20;
-    y+=random(3, 7);
-    dt=0;
-  }
-  popMatrix();
-}
+    fill(200, 0, 0);
+    stroke(100, 0, 0, 40);
+    pushMatrix();
+    translate(cx, cy, z-cd);
+    drawCylinder(mx*0.2, 0, mx*0.8, 16);
+    popMatrix();
+    pushMatrix();
+    translate(cx, cy, z-cd-mx*1.2);
+    fill(150);
+    drawCylinder(mx*0.15, mx*0.15, mx*1.2, 8);
+    popMatrix();
 
-void obstacle(float cx, float ch, float cd) {
-  fill(120);
-  stroke(100);
-  beginShape();
-  vertex(cx-mx/2, 2*my, z-cd);
-  vertex(cx+mx/2, 2*my, z-cd);
-  vertex(cx+mx/2, my-ch*my/2, z-cd);
-  vertex(cx-mx/2, my-ch*my/2, z-cd);
-  endShape(CLOSE);
-
-  pushMatrix();
-  translate(X, Y, z);
-  if (z-cd<=speed && z-cd>=-speed) {
-    if (X-mx/2+cx>=0 && X-mx/2+cx<=mx && ch*my/4>=Y-my) {
+    pushMatrix();
+    //translate(X, Y, z);
+    if (z-cd<=speed && z-cd>=-speed && dist(0, 0, X-mx, Y-my)<mx*0.28) {
       speed=0;
-      r=20;
+      r=120;
       g=20;
       b=20;
       y+=random(3, 7);
       dt=0;
     }
+    popMatrix();
   }
-  popMatrix();
+}
+
+void obstacle(float cx, float ch, float cd) {
+  if (z>cd-6000 || z<cd+200) {
+
+    fill(120);
+    stroke(100);
+    beginShape();
+    vertex(cx-mx/2, 2*my, z-cd);
+    vertex(cx+mx/2, 2*my, z-cd);
+    vertex(cx+mx/2, my-ch*my/2, z-cd);
+    vertex(cx-mx/2, my-ch*my/2, z-cd);
+    endShape(CLOSE);
+
+    pushMatrix();
+    translate(X, Y, z);
+    if (z-cd<=speed && z-cd>=-speed) {
+      if (X-mx/2+cx>=0 && X-mx/2+cx<=mx && ch*my/4>=Y-my) {
+        speed=0;
+        r=20;
+        g=20;
+        b=20;
+        y+=random(3, 7);
+        dt=0;
+      }
+    }
+    popMatrix();
+  }
 }
 
 void cloud(float cx, float cy, float cw, float ch, float cd, PImage cloud) {
@@ -241,15 +247,15 @@ void myself() {
   }
   one = msg-ten;
   if (one==5) {
-    y+=my/40;
+    y-=my/40;
   } else if (one==4) {
-    y+=my/100;
+    y-=my/100;
   } else if (one==3) {
     y+=0;
   } else if (one==2) {
-    y-=my/100;
+    y+=my/100;
   } else {
-    y-=my/40;
+    y+=my/40;
   }
 
 
@@ -271,7 +277,7 @@ void myself() {
     y=py;
   }
 
-  println(x,y);
+  println(x, y);
   beginShape();
   fill(r, g, b);
   texture(man);
