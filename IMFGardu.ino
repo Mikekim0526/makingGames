@@ -10,11 +10,11 @@ const int L = 60;
 const int R = 100;
 const int RR = 120;
 
-int UsualX = 112;
-const int FF = 88;
-const int F = 97;
-const int B = 118;
-const int BB = 123;
+int UsualX = 150;
+const int FF = 135;
+const int F = 148;
+const int B = 158;
+const int BB = 170;
 
 int ten, one;
 
@@ -67,7 +67,7 @@ void Accelerometer(){
   //Serial.println(accY);
   Serial.print(ten);
   Serial.println(one);
-  delay(800);
+  delay(50);
 }
 
 void setup() {
