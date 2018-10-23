@@ -1,0 +1,56 @@
+int r, g, b;
+void setup() {
+  size(400, 300);
+  r=0;
+  g=0;
+  b=0;
+  frameRate(5);
+}
+
+void draw() {
+  background(90, 130, 200);
+  scene();
+}
+
+
+void scene() {
+  noStroke();
+  fill(255,255,170);              //(200,200,200), (215,140,155), (160,50,55)
+  rect(0, height*0.875, width, height*0.125);
+  fill(200,200,200);
+  rect(0, height*0.83, width, height*0.0435);
+  fill(215,140,155);
+  rect(0, height*0.823, width, height*0.021);
+  fill(160,50,55);
+  rect(0, height*0.8125, width, height*0.015625);
+  println(r, "   ", g, "   ", b);
+  
+  fill(r,g,b);                    //(60,120,75)
+  beginShape();
+  smooth();
+  vertex(width*0.08, height*0.8125);
+  vertex(width*0.25, height*0.72);
+  vertex(width*0.32, height*0.7);
+  vertex(width*0.48, height*0.72);
+  vertex(width*0.63, height*0.66);
+  vertex(width*0.8, height*0.8125);
+  endShape();
+}
+
+void keyPressed() {
+  if (keyCode=='U') {
+    r+=5;
+  } else if (keyCode=='J') {
+    r-=5;
+  }
+  if (keyCode=='I') {
+    g+=5;
+  } else if (keyCode=='K') {
+    g-=5;
+  }
+  if (keyCode=='O') {
+    b+=5;
+  } else if (keyCode=='L') {
+    b-=5;
+  }
+}
